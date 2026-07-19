@@ -1,38 +1,36 @@
 pipeline {
     agent any
 
+    tools {
+        sonarQubeScanner 'SonarScanner'
+    }
+
     stages {
 
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Verify Workspace') {
+        stage('Build Verification') {
             steps {
                 sh '''
-                echo "Current Directory:"
-                pwd
-
-                echo "Repository Contents:"
-                ls -la
-
-                echo "Project Structure:"
-                tree -L 2
+                    pwd
+                    ls -la
                 '''
             }
         }
 
-    }
-
-    post {
-        success {
-            echo 'Pipeline completed successfully.'
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh '''
+                    sonar-scanner                     -Dsonar.projectKey=shopwave                     -Dsonar.projectName=ShopWave                     -Dsonar.sources=.
+                    '''
+                }
+            }
         }
 
-        failure {
-            echo 'Pipeline failed.'
-        }
     }
 }
