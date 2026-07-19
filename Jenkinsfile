@@ -27,7 +27,7 @@ pipeline {
                 withSonarQubeEnv('SonarQube') {
                     sh '''
                     sonar-scanner \
-		    -Dsonar.projectKey=shopwave \ 
+		    -Dsonar.projectKey=ShopWave \
                     -Dsonar.projectName=ShopWave \
                     -Dsonar.sources=.
                     '''
